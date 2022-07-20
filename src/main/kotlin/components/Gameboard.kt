@@ -1,67 +1,43 @@
 package components
 
+import Handler
+import Store
 import csstype.*
 import emotion.react.css
-import kotlinx.browser.window
-import utils.ReusableCSS
 import org.w3c.dom.events.Event
-import react.*
+import react.FC
+import react.Props
 import react.dom.html.ReactHTML.div
-import store.AppState
-import store.reducers.InitSnakeAction
-import kotlin.random.Random
+import store.reducers.Direction
+import store.reducers.Gameboard
+import store.reducers.GridSpaceRoles
+import store.reducers.MoveSnakeAction
+import utils.ReusableCSS
 
-data class GridSpace(val row: Int, val column: Int) {
-    var isSnakeHead = false
-    var isSnakeBody = false
-    var isSnakePart = false
-    var isFood = isSnakeBody || isSnakeBody
 
-    override operator fun equals(other: Any?): Boolean {
-        return if (other is GridSpace) this.row == other.row && this.column == other.column else false
-    }
-
-    override fun hashCode(): Int {
-        var result = row
-        result = 31 * result + column
-        return result
-    }
+external interface GameboardProps : Props {
+    var addToWindow: (type: String, Handler) -> Unit
+    var size: Int
+    var gameboard: Gameboard
 }
 
-val Gameboard = FC<Props> {
+val Gameboard = FC<GameboardProps> {
     val store = Store.appStore
-    var state: AppState by useState(store.state)
-    val snake = state.snake
-    val size = state.sizeValue
 
-    val gridSpaces: List<GridSpace> by useState(kotlin.run {
-        val gridSpaces = mutableListOf<GridSpace>()
-        (0..size).forEach { row ->
-            (0..size).forEach { col ->
-                gridSpaces.add(GridSpace(row, col))
-            }
+    val keyDownHandler: (Event) -> Unit = { e ->
+        val key = e.asDynamic().code as String
+        val direction = when (key) {
+            "KeyW", "ArrowUp" -> Direction.UP
+            "KeyA", "ArrowLeft" -> Direction.LEFT
+            "KeyS", "ArrowDown" -> Direction.DOWN
+            "KeyD", "ArrowRight" -> Direction.RIGHT
+            else -> null
         }
-        gridSpaces.toList()
-    })
 
-    val unsubscribe = store.subscribe { state = store.state }
-
-    fun getRandomGridSpace(): GridSpace {
-        val row = Random.nextInt(0, size)
-        val column = Random.nextInt(0, size)
-        return gridSpaces.find {
-            it == GridSpace(row, column)
-        }!!
+        direction?.let { dir -> store.dispatch(MoveSnakeAction(dir)) }
     }
 
-    useEffectOnce {
-        store.dispatch(InitSnakeAction(getRandomGridSpace()))
-    }
-
-    snake.forEachIndexed { i, snakePart ->
-        val gridSpace = gridSpaces.find { it == snakePart }!!
-        if (i == 0) gridSpace.isSnakeHead = true else gridSpace.isSnakeBody = true
-    }
+    it.addToWindow("keydown", keyDownHandler)
 
     div {
         css {
@@ -71,19 +47,19 @@ val Gameboard = FC<Props> {
             width = 70.vh
             height = 70.vh
             display = Display.grid
-            gridTemplateRows = repeat(size, 1.fr)
-            gridTemplateColumns = repeat(size, 1.fr)
+            gridTemplateRows = repeat(it.size, 1.fr)
+            gridTemplateColumns = repeat(it.size, 1.fr)
         }
 
-        gridSpaces.map {
+        it.gameboard.board.map {
             div {
                 css {
                     outline = Outline(((0.1).rem), LineStyle.solid, Color("#0f0f0f"))
-                    backgroundColor = when {
-                        it.isSnakeHead -> Color(ReusableCSS.SNAKE_HEAD_COLOR)
-                        it.isSnakeBody -> Color(ReusableCSS.SNAKE_BODY_COLOR)
-                        it.isFood -> Color(ReusableCSS.FOOD_COLOR)
-                        else -> Color(ReusableCSS.GRID_BACKGROUND_COLOR)
+                    backgroundColor = when (it.role) {
+                        GridSpaceRoles.SNAKE_HEAD -> Color(ReusableCSS.SNAKE_HEAD_COLOR)
+                        GridSpaceRoles.SNAKE_BODY -> Color(ReusableCSS.SNAKE_BODY_COLOR)
+                        GridSpaceRoles.FOOD -> Color(ReusableCSS.FOOD_COLOR)
+                        GridSpaceRoles.EMPTY -> Color(ReusableCSS.GRID_BACKGROUND_COLOR)
                     }
                 }
                 id = "gridSpace__${it.row}-${it.column}"
