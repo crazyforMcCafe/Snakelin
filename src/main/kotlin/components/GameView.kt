@@ -14,7 +14,6 @@ import store.reducers.GridSpaceRoles
 import store.reducers.MoveSnakeAction
 import utils.ReusableCSS
 
-
 external interface GameboardProps : Props {
     var addToWindow: (type: String, Handler) -> Unit
     var size: Int
@@ -51,7 +50,7 @@ val Gameboard = FC<GameboardProps> {
             gridTemplateColumns = repeat(it.size, 1.fr)
         }
 
-        it.gameboard.board.map {
+        it.gameboard.board.flatten().map {
             div {
                 css {
                     outline = Outline(((0.1).rem), LineStyle.solid, Color("#0f0f0f"))
@@ -61,6 +60,7 @@ val Gameboard = FC<GameboardProps> {
                         GridSpaceRoles.FOOD -> Color(ReusableCSS.FOOD_COLOR)
                         GridSpaceRoles.EMPTY -> Color(ReusableCSS.GRID_BACKGROUND_COLOR)
                     }
+                    color = Color("green")
                 }
                 id = "gridSpace__${it.row}-${it.column}"
             }
