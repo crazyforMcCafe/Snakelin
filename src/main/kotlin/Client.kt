@@ -1,5 +1,3 @@
-import components.Gameboard
-import components.Title
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.reduxkotlin.createStore
@@ -10,7 +8,9 @@ import store.AppState
 import store.SettingsList
 import store.rootReducer
 import WindowHandler.addToWindowHandler
-import store.reducers.Gameboard
+import components.GameView
+import components.menu.Menu
+import store.Gameboard
 import store.reducers.InitBoardAction
 
 val INITIAL_STATE = AppState(
@@ -49,12 +49,12 @@ val App = FC<Props> {
 
     useEffectOnce { store.dispatch(InitBoardAction(state.sizeValue)) }
 
-    Title()
-    Gameboard {
-        addToWindow = addToWindowHandler
-        size = state.sizeValue
-        gameboard = state.gameboard
-    }
+//    GameView {
+//        addToWindow = addToWindowHandler
+//        size = state.sizeValue
+//        gameboard = state.gameboard
+//    }
+    Menu()
 }
 
 fun main() {

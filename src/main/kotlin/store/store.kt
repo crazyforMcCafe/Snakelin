@@ -10,14 +10,12 @@ data class AppState(
     val settingsList: SettingsList,
     val gameboard: Gameboard
 ) {
-    private val tempoMap = listOf(250, 180, 130, 80)
+    private val tempoMap = listOf(150, 125, 100, 75, 50)
     private val sizeMap = listOf(10, 15, 20, 25)
 
     val tempoValue = tempoMap[settingsList.tempoSetting]
     val sizeValue = sizeMap[settingsList.sizeSetting]
 }
-
-
 
 val rootReducer: Reducer<AppState> = { state, action ->
     AppState(

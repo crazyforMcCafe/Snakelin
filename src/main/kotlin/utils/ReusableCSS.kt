@@ -12,8 +12,13 @@ object ReusableCSS {
     const val FOOD_COLOR = "#f10"
     const val GRID_BACKGROUND_COLOR = "#000"
 
-    val centered: PropertiesBuilder.() -> Unit = {
+    val centeredHorizontal: PropertiesBuilder.() -> Unit = {
         marginLeft = 50.vw
-        transform = translate((-50).pct)
+        transform = translatex((-50).pct)
+    }
+
+    val centeredVertical: PropertiesBuilder.() -> Unit = {
+        marginTop = 50.vh
+        transform = translatey((-50).pct)
     }
 }
