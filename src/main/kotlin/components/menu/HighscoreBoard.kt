@@ -16,9 +16,10 @@ val HighscoreBoard = FC<Props> {
     div {
         p {
             css {
-                fontSize = 2.rem
+                fontSize = (2.8).rem
                 marginBottom = (0.2).rem
                 borderBottom = Border((0.8).rem, LineStyle.double, Color("#fff"))
+                width = 40.rem
             }
             +"High Scores:"
         }
@@ -26,9 +27,9 @@ val HighscoreBoard = FC<Props> {
         div {
             css {
                 display = Display.grid
-                gridTemplateColumns = "min-content 1fr".unsafeCast<GridTemplateTracks>()
-                fontSize = (1.6).rem
-                marginLeft = (2.6).rem
+                gridTemplateColumns = "8rem 1fr".unsafeCast<GridTemplateTracks>()
+                fontSize = (2.2).rem
+                marginLeft = (1.4).rem
             }
 
             section {
@@ -37,7 +38,7 @@ val HighscoreBoard = FC<Props> {
                 }
             }
             section {
-                DUMMY_SCORES.forEach {
+                DUMMY_SCORES.sorted().forEach {
                     p { +"$it" }
                 }
             }
