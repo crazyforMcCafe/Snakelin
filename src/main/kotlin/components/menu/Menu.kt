@@ -28,6 +28,8 @@ val Menu = FC<Props> {
                 marginBottom = (1.6).rem
                 borderLeft = Border((0.2).rem, LineStyle.solid, Color("#fff"))
                 paddingLeft = (1.2).rem
+
+                backgroundImage = "linear-gradient(to right, #333399, transparent)".unsafeCast<BackgroundImage>()
             }
 
             +"Snakelin"
