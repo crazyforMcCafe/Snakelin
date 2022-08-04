@@ -10,8 +10,12 @@ data class AppState(
     val settingsList: SettingsList,
     val gameboard: Gameboard
 ) {
-    private val tempoMap = listOf(150, 125, 100, 75, 50)
-    private val sizeMap = listOf(10, 15, 20, 25)
+    companion object {
+        private val tempoMap = listOf(150, 125, 100, 75, 50)
+        private val sizeMap = listOf(10, 15, 20, 25)
+
+        val settingsMaxIndices = mapOf(Settings.TEMPO to tempoMap.size, Settings.SIZE to sizeMap.size)
+    }
 
     val tempoValue = tempoMap[settingsList.tempoSetting]
     val sizeValue = sizeMap[settingsList.sizeSetting]

@@ -61,7 +61,7 @@ val GameView = FC<GameboardProps> { props ->
     useEffect(lastPressedKey) {
         moveSnakeInterval?.let { clearInterval(it) }
         moveSnakeInterval = setInterval(props.tempo.milliseconds) {
-            // FIX
+            // TODO: FIX
             lastPressedKey?.let { moveSnake(it) }
         }
     }

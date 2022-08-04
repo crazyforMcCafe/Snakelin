@@ -7,8 +7,6 @@ import react.dom.client.createRoot
 import store.AppState
 import store.SettingsList
 import store.rootReducer
-import WindowHandler.addToWindowHandler
-import components.GameView
 import components.menu.Menu
 import store.Gameboard
 import store.reducers.InitBoardAction
@@ -43,17 +41,12 @@ object WindowHandler {
 
 val App = FC<Props> {
     val store = Store.appStore
-    var state by useState(store.state)
+//    var state by useState(store.state)
+//
+//    val unsubscribe = store.subscribe { state = store.state }
 
-    val unsubscribe = store.subscribe { state = store.state }
+    useEffectOnce { store.dispatch(InitBoardAction(store.state.sizeValue)) }
 
-    useEffectOnce { store.dispatch(InitBoardAction(state.sizeValue)) }
-
-//    GameView {
-//        addToWindow = addToWindowHandler
-//        size = state.sizeValue
-//        gameboard = state.gameboard
-//    }
     Menu()
 }
 
