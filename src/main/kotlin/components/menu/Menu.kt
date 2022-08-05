@@ -5,12 +5,6 @@ import emotion.react.css
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
-import utils.ReusableCSS
-import kotlinx.browser.document
-import react.ReactNode
-import react.create
-import react.dom.createPortal
-import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.h1
 
 val Menu = FC<Props> {
@@ -36,5 +30,6 @@ val Menu = FC<Props> {
         }
 
         HighscoreBoard()
+        SettingsMenu()
     }
 }

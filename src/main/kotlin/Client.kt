@@ -5,15 +5,15 @@ import org.w3c.dom.events.Event
 import react.*
 import react.dom.client.createRoot
 import store.AppState
-import store.SettingsList
 import store.rootReducer
 import components.menu.Menu
 import store.Gameboard
 import store.reducers.InitBoardAction
+import store.reducers.Settings
 
 val INITIAL_STATE = AppState(
     gameState = null,
-    settingsList = SettingsList(0, 0),
+    settingsIndices = mapOf(Settings.TEMPO to 0, Settings.SIZE to 0),
     gameboard = Gameboard(10, 10)
 )
 
@@ -45,7 +45,7 @@ val App = FC<Props> {
 //
 //    val unsubscribe = store.subscribe { state = store.state }
 
-    useEffectOnce { store.dispatch(InitBoardAction(store.state.sizeValue)) }
+    useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues.size)) }
 
     Menu()
 }
