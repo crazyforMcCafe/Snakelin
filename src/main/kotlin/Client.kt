@@ -6,7 +6,7 @@ import react.*
 import react.dom.client.createRoot
 import store.AppState
 import store.rootReducer
-import components.menu.Menu
+import components.menu.MainMenu
 import store.Gameboard
 import store.reducers.InitBoardAction
 import store.reducers.Settings
@@ -47,7 +47,7 @@ val App = FC<Props> {
 
     useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues.size)) }
 
-    Menu()
+    MainMenu()
 }
 
 fun main() {
