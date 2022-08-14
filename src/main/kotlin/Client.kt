@@ -47,6 +47,7 @@ val App = FC<Props> {
 
     useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues.size)) }
 
+//    +modalPortal
     MainMenu()
 }
 

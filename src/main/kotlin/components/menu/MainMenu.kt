@@ -49,6 +49,9 @@ val MainMenu = FC<Props> {
                 css {
                     gridArea = "1 / 2 / span 1 / span 1".unsafeCast<GridArea>()
                     marginRight = 2.rem
+                    justifySelf = JustifySelf.center
+                    height = 110.pct
+                    alignSelf = AlignSelf.center
                 }
                 SettingsMenu()
             }
