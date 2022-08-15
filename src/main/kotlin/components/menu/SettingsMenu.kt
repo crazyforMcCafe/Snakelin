@@ -92,10 +92,15 @@ val SettingSetter = FC<SettingSetterProps> { props ->
             +props.displayName
         }
         section {
+            // In rem
+            val wholeWidth = 25
+            val buttonWidth = 2.4
+            val labelWidth = wholeWidth - (buttonWidth * 2)
+
             css {
-                width = 85.pct
+                width = 25.rem
                 display = Display.grid
-                gridTemplateColumns = "2.4rem 1fr 2.4rem".unsafeCast<GridTemplateColumns>()
+                gridTemplateColumns = "${buttonWidth}rem ${labelWidth}rem ${buttonWidth}rem".unsafeCast<GridTemplateColumns>()
                 margin = Auto.auto
             }
             SettingEditButton {
@@ -104,13 +109,27 @@ val SettingSetter = FC<SettingSetterProps> { props ->
                     changeSetting(-1)
                 }
             }
-            p {
+            div {
                 css {
                     border = Border((0.1).rem, LineStyle.solid, Color("#fff"))
-                    fontSize = (1.8).rem
-                    textAlign = TextAlign.center
+                    overflow = Overflow.hidden
+                    display = Display.grid
+                    gridTemplateColumns = repeat(props.options.size, labelWidth.rem)
+                    alignItems = AlignItems.stretch
                 }
-                +props.options[settingIndex]
+                props.options.map {
+                    p {
+                        css {
+                            fontSize = (1.8).rem
+                            textAlign = TextAlign.center
+                            paddingTop = (0.2).rem
+
+                            transition = "transform 100ms ease-out".unsafeCast<Transition>()
+                            transform = translatex(-(settingIndex * labelWidth).rem)
+                        }
+                        +it
+                    }
+                }
             }
             SettingEditButton {
                 right = true
