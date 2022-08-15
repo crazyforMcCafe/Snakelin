@@ -3,8 +3,11 @@ package components.menu
 import Store
 import csstype.*
 import emotion.react.css
+import org.w3c.dom.HTMLButtonElement
 import react.FC
 import react.Props
+import react.dom.events.MouseEventHandler
+import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
@@ -18,19 +21,47 @@ external interface SettingSetterProps : Props {
     var options: List<String>
 }
 
-abstract class SettingEditButtonProps : MenuButtonProps {
-    var right: Boolean = false
-    var left: Boolean = false
+external interface SettingEditButtonProps : Props {
+    var right: Boolean
+    var left: Boolean
+    var onClick: MouseEventHandler<HTMLButtonElement>
 }
 
 val SettingEditButton = FC<SettingEditButtonProps> { props ->
-    div {
+    button {
+        onClick = props.onClick
         css {
+            padding = 0.rem
+            color = Color("#fff")
+            border = Border((0.1).rem, LineStyle.solid, Color("#fff"))
+            background = None.none
+            fontSize = 2.rem
+            cursor = Cursor.pointer
+
+            width = 100.pct
             fontFamily = FontFamily.serif
+
+            transition = "transform 100ms ease-out".unsafeCast<Transition>()
+
+            hover {
+                transform = translatey((0.4).rem)
+            }
+
+            active {
+                transition = None.none
+                transform = translatey((0.8).rem)
+            }
         }
-        MenuButton {
-            text = if (props.left) "\u25C0" else if (props.right) "\u25B6" else "" // ◀ and ▶
-            onClick = props.onClick
+        div {
+            css {
+                width = 100.pct
+                height = 100.pct
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                alignContent = AlignContent.center
+                flexDirection = FlexDirection.column
+            }
+            +(if (props.left) "\u25C0" else if (props.right) "\u25B6" else "") // ◀ and ▶
         }
     }
 }
