@@ -24,10 +24,6 @@ val MenuButton = FC<MenuButtonProps> { props ->
             fontSize = 2.rem
 
             width = 100.pct
-
-//            display = Display.flex
-//            justifyContent = JustifyContent.stretch
-//            alignContent = AlignContent.stretch
         }
         onClick = props.onClick
         div {
