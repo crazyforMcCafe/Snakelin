@@ -41,22 +41,22 @@ val GameView = FC<GameboardProps> { props ->
     }
 
     fun moveSnake(keyPressed: String) {
-        if(lastPressedKey != keyPressed) {
-            lastPressedKey = keyPressed
-            val direction = getDirectionFromKey(keyPressed)
+        lastPressedKey = keyPressed
+        val direction = getDirectionFromKey(keyPressed)
 
-            direction?.let { dir -> store.dispatch(MoveSnakeAction(dir)) }
-        }
+        direction?.let { dir -> store.dispatch(MoveSnakeAction(dir)) }
+    }
+
+    fun pressToMoveSnake(keyPressed: String) {
+        if (lastPressedKey != keyPressed) moveSnake(keyPressed)
     }
 
     val keyDownHandler: (Event) -> Unit = { e ->
         val key = e.asDynamic().code as String
-        moveSnake(key)
+        pressToMoveSnake(key)
     }
 
     props.addToWindow("keydown", keyDownHandler)
-
-    console.log(moveSnakeInterval)
 
     useEffect(lastPressedKey) {
         moveSnakeInterval?.let { clearInterval(it) }
@@ -68,8 +68,8 @@ val GameView = FC<GameboardProps> { props ->
 
     div {
         css {
-//            ReusableCSS.centeredHorizontal(this)
-            ReusableCSS.centeredVertical(this)
+            margin = Auto.auto
+            marginTop = 6.rem
 
             outline = Outline(((0.1).rem), LineStyle.solid, Color("gray"))
             width = 70.vh

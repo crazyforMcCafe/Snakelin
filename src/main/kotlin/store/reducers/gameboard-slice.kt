@@ -26,6 +26,7 @@ val gameboardReducer: Reducer<Gameboard> = { state, action ->
                         Direction.RIGHT -> state.board[row][column + 1]
                     }
                 } catch (_: IndexOutOfBoundsException) {
+                    // TODO: End game
                     null
                 }
             }

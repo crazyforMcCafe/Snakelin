@@ -1,3 +1,4 @@
+import components.GameView
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.reduxkotlin.createStore
@@ -6,7 +7,6 @@ import react.*
 import react.dom.client.createRoot
 import store.AppState
 import store.rootReducer
-import components.menu.MainMenu
 import store.Gameboard
 import store.reducers.InitBoardAction
 import store.reducers.Settings
@@ -41,17 +41,20 @@ object WindowHandler {
 
 val App = FC<Props> {
     val store = Store.appStore
-//    var state by useState(store.state)
-//
-//    val unsubscribe = store.subscribe { state = store.state }
+    var state by useState(store.state)
+    store.subscribe { state = store.state }
 
-    useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues.size)) }
+    useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE]!!)) }
 
-//    +modalPortal
-    MainMenu()
+    GameView {
+        addToWindow = WindowHandler.addToWindowHandler
+        size = state.settingsValues[Settings.SIZE] ?: error("Could not find \"${Settings.SIZE}\" setting!")
+        tempo = state.settingsValues[Settings.TEMPO] ?: error("Could not find \"${Settings.TEMPO}\" setting!")
+        gameboard = state.gameboard
+    }
 }
 
 fun main() {
-    val container = document.getElementById("root") ?: error("Couldn't find root container!")
+    val container = document.getElementById("root") ?: error("Could not find root container!")
     createRoot(container).render(App.create())
 }
