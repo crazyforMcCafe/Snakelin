@@ -1,10 +1,8 @@
 package utils
 
 import csstype.*
-import kotlinx.browser.window
 
-val VIEWPORT_WIDTH = window.length
-val VIEWPORT_HEIGHT = window.innerHeight
+typealias CSS = PropertiesBuilder.() -> Unit
 
 object ReusableCSS {
     const val SNAKE_HEAD_COLOR = "#fff"
@@ -12,13 +10,12 @@ object ReusableCSS {
     const val FOOD_COLOR = "#f10"
     const val GRID_BACKGROUND_COLOR = "#000"
 
-    val centeredHorizontal: PropertiesBuilder.() -> Unit = {
-        marginLeft = 50.vw
-        transform = translatex((-50).pct)
-    }
-
-    val centeredVertical: PropertiesBuilder.() -> Unit = {
-        marginTop = 50.vh
-        transform = translatey((-50).pct)
+    val styledButton: CSS = {
+        padding = 0.rem
+        color = Color("#fff")
+        border = Border((0.1).rem, LineStyle.solid, Color("#fff"))
+        background = None.none
+        fontSize = 2.rem
+        cursor = Cursor.pointer
     }
 }
