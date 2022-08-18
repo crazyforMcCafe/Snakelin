@@ -14,6 +14,7 @@ import react.dom.html.ReactHTML.section
 import react.useState
 import store.reducers.ChangeSettingAction
 import store.reducers.Settings
+import utils.ReusableCSS
 
 external interface SettingSetterProps : Props {
     var settingId: Settings
@@ -41,16 +42,7 @@ val SettingEditButton = FC<SettingEditButtonProps> { props ->
             width = 100.pct
             fontFamily = FontFamily.serif
 
-            transition = "transform 100ms ease-out".unsafeCast<Transition>()
-
-            hover {
-                transform = translatey((0.4).rem)
-            }
-
-            active {
-                transition = None.none
-                transform = translatey((0.8).rem)
-            }
+            ReusableCSS.animatedWhenPressedDown(this)
         }
         div {
             css {

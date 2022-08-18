@@ -18,4 +18,17 @@ object ReusableCSS {
         fontSize = 2.rem
         cursor = Cursor.pointer
     }
+
+    val animatedWhenPressedDown: CSS = {
+        transition = "transform 100ms ease-out".unsafeCast<Transition>()
+
+        hover {
+            transform = translatey(0.4.em)
+        }
+
+        active {
+            transition = None.none
+            transform = translatey(0.8.em)
+        }
+    }
 }
