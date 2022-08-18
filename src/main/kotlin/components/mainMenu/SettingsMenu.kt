@@ -1,4 +1,4 @@
-package components.menu
+package components.mainMenu
 
 import Store
 import csstype.*

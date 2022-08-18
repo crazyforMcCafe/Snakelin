@@ -5,7 +5,7 @@ import store.reducers.*
 
 
 data class AppState(
-    val gameState: GameState?,
+    val gameState: GameState,
     val settingsIndices: Map<Settings, Int>,
     val gameboard: Gameboard
 ) {

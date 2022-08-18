@@ -8,12 +8,13 @@ import react.dom.client.createRoot
 import store.AppState
 import store.rootReducer
 import store.Gameboard
+import store.reducers.GameState
 import store.reducers.InitBoardAction
 import store.reducers.Settings
 
 val INITIAL_STATE = AppState(
-    gameState = null,
-    settingsIndices = mapOf(Settings.TEMPO to 0, Settings.SIZE to 0),
+    gameState = GameState.PLAYING,
+    settingsIndices = mapOf(Settings.TEMPO to 2, Settings.SIZE to 2),
     gameboard = Gameboard(10, 10)
 )
 
@@ -46,11 +47,13 @@ val App = FC<Props> {
 
     useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE]!!)) }
 
+    console.log(state.gameState.toString())
     GameView {
         addToWindow = WindowHandler.addToWindowHandler
         size = state.settingsValues[Settings.SIZE] ?: error("Could not find \"${Settings.SIZE}\" setting!")
         tempo = state.settingsValues[Settings.TEMPO] ?: error("Could not find \"${Settings.TEMPO}\" setting!")
         gameboard = state.gameboard
+        gameState = state.gameState
     }
 }
 

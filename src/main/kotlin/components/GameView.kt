@@ -16,18 +16,21 @@ import react.useState
 import store.Gameboard
 import store.GridSpaceRoles
 import store.reducers.Direction
+import store.reducers.GameState
 import store.reducers.MoveSnakeAction
+import store.reducers.SetGameStateAction
 import utils.ReusableCSS
 import kotlin.time.Duration.Companion.milliseconds
 
-external interface GameboardProps : Props {
+external interface GameViewProps : Props {
     var addToWindow: (type: String, Handler) -> Unit
     var size: Int
     var tempo: Int
     var gameboard: Gameboard
+    var gameState: GameState
 }
 
-val GameView = FC<GameboardProps> { props ->
+val GameView = FC<GameViewProps> { props ->
     val store = Store.appStore
     var lastPressedKey: String? by useState(null)
     var moveSnakeInterval: Timeout? by useState(null)
@@ -47,13 +50,28 @@ val GameView = FC<GameboardProps> { props ->
         direction?.let { dir -> store.dispatch(MoveSnakeAction(dir)) }
     }
 
-    fun pressToMoveSnake(keyPressed: String) {
+    fun changeDirection(keyPressed: String) {
         if (lastPressedKey != keyPressed) moveSnake(keyPressed)
+    }
+
+    fun pressEscapeHandler() {
+        if (props.gameState != GameState.PAUSED) {
+            store.dispatch(SetGameStateAction(GameState.PAUSED))
+            moveSnakeInterval?.let { clearInterval(it) }
+        } else {
+            store.dispatch(SetGameStateAction(GameState.PLAYING))
+            lastPressedKey?.let {
+                moveSnake(it)
+                moveSnakeInterval = setInterval(props.tempo.milliseconds) { moveSnake(it) }
+            }
+        }
     }
 
     val keyDownHandler: (Event) -> Unit = { e ->
         val key = e.asDynamic().code as String
-        pressToMoveSnake(key)
+        if (key == "Escape") {
+            pressEscapeHandler()
+        } else if (props.gameState == GameState.PLAYING) changeDirection(key)
     }
 
     props.addToWindow("keydown", keyDownHandler)
@@ -61,7 +79,6 @@ val GameView = FC<GameboardProps> { props ->
     useEffect(lastPressedKey) {
         moveSnakeInterval?.let { clearInterval(it) }
         moveSnakeInterval = setInterval(props.tempo.milliseconds) {
-            // TODO: FIX
             lastPressedKey?.let { moveSnake(it) }
         }
     }

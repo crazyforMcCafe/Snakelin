@@ -1,4 +1,4 @@
-package components.menu
+package components.mainMenu
 
 import csstype.*
 import emotion.react.css
