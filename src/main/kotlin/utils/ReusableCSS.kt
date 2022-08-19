@@ -1,6 +1,7 @@
 package utils
 
 import csstype.*
+import emotion.css.keyframes
 
 typealias CSS = PropertiesBuilder.() -> Unit
 
@@ -11,7 +12,7 @@ object ReusableCSS {
     const val GRID_BACKGROUND_COLOR = "#000"
 
     val styledButton: CSS = {
-        padding = 0.rem
+        padding = 0.4.rem
         color = Color("#fff")
         border = Border((0.1).rem, LineStyle.solid, Color("#fff"))
         background = None.none
@@ -30,5 +31,30 @@ object ReusableCSS {
             transition = None.none
             transform = translatey(0.8.em)
         }
+    }
+
+    val invertColorWhenHovered: CSS = {
+        hover {
+            color = Color("#000")
+            backgroundColor = Color("#fff")
+        }
+    }
+
+    val buttonFlashAnimation: CSS = {
+        val pressButtonAni = keyframes {
+            0.pct {
+                backgroundColor = Color("#000")
+                color = Color("#fff")
+            }
+            50.pct {
+                backgroundColor = Color("#fff")
+                color = Color("#000")
+            }
+        }
+
+        animationName = pressButtonAni
+        animationDuration = "300ms".unsafeCast<AnimationDuration>()
+        animationTimingFunction = "cubic-bezier(1, 0, 1, 0)".unsafeCast<AnimationTimingFunction>()
+        animationIterationCount = AnimationIterationCount.infinite
     }
 }
