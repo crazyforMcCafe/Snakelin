@@ -42,18 +42,11 @@ object WindowHandler {
 
 val App = FC<Props> {
     val store = Store.appStore
-    var state by useState(store.state)
-    store.subscribe { state = store.state }
 
     useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE]!!)) }
 
-    console.log(state.gameState.toString())
     GameView {
         addToWindow = WindowHandler.addToWindowHandler
-        size = state.settingsValues[Settings.SIZE] ?: error("Could not find \"${Settings.SIZE}\" setting!")
-        tempo = state.settingsValues[Settings.TEMPO] ?: error("Could not find \"${Settings.TEMPO}\" setting!")
-        gameboard = state.gameboard
-        gameState = state.gameState
     }
 }
 

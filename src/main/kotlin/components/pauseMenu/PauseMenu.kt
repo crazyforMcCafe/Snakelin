@@ -12,6 +12,8 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
 import react.useState
+import store.reducers.GameState
+import store.reducers.SetGameStateAction
 import utils.ReusableCSS
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -43,6 +45,8 @@ val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
 }
 
 val PauseMenu = FC<Props> {
+    val store = Store.appStore
+
     div {
         css {
             width = 28.rem
@@ -69,12 +73,14 @@ val PauseMenu = FC<Props> {
             PauseMenuButton {
                 onClick = {
                     console.log("Pressed RESUME button")
+                    store.dispatch(SetGameStateAction(GameState.PLAYING))
                 }
                 text = "Resume"
             }
             PauseMenuButton {
                 onClick = {
                     console.log("Pressed QUIT button")
+                    store.dispatch(SetGameStateAction(GameState.PLAYING))
                 }
                 text = "Quit"
             }

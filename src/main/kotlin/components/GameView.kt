@@ -15,27 +15,23 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
 import react.useEffect
 import react.useState
-import store.Gameboard
 import store.GridSpaceRoles
+import store.reducers.*
 import store.reducers.Direction
-import store.reducers.GameState
-import store.reducers.MoveSnakeAction
-import store.reducers.SetGameStateAction
 import utils.ReusableCSS
 import kotlin.time.Duration.Companion.milliseconds
 
 external interface GameViewProps : Props {
     var addToWindow: (type: String, Handler) -> Unit
-    var size: Int
-    var tempo: Int
-    var gameboard: Gameboard
-    var gameState: GameState
 }
 
 val GameView = FC<GameViewProps> { props ->
     val store = Store.appStore
+    var state by useState(store.state)
+
     var lastPressedKey: String? by useState(null)
     var moveSnakeInterval: Timeout? by useState(null)
+//    var currentGameState: GameState by useState(GameState.PLAYING)
 
     fun getDirectionFromKey(key: String) = when (key) {
         "KeyW", "ArrowUp" -> Direction.UP
@@ -56,16 +52,27 @@ val GameView = FC<GameViewProps> { props ->
         if (lastPressedKey != keyPressed) moveSnake(keyPressed)
     }
 
-    fun pressEscapeHandler() {
-        if (props.gameState != GameState.PAUSED) {
-            store.dispatch(SetGameStateAction(GameState.PAUSED))
-            moveSnakeInterval?.let { clearInterval(it) }
-        } else {
-            store.dispatch(SetGameStateAction(GameState.PLAYING))
+    store.subscribe { state = store.state }
+
+    useEffect(state.gameState) {
+        console.log("current gameState = ${state.gameState}")
+        if (state.gameState == GameState.PLAYING) {
             lastPressedKey?.let {
                 moveSnake(it)
-                moveSnakeInterval = setInterval(props.tempo.milliseconds) { moveSnake(it) }
+                moveSnakeInterval = setInterval(state.settingsValues[Settings.TEMPO]!!.milliseconds) { moveSnake(it) }
             }
+        } else if (state.gameState == GameState.PAUSED) {
+            moveSnakeInterval?.let { clearInterval(it) }
+        }
+    }
+
+    fun pressEscapeHandler() {
+        if (state.gameState != GameState.PAUSED) {
+            console.log("Should go to paused")
+            store.dispatch(SetGameStateAction(GameState.PAUSED))
+        } else if (state.gameState == GameState.PAUSED) {
+            console.log("Should go to resumed")
+            store.dispatch(SetGameStateAction(GameState.PLAYING))
         }
     }
 
@@ -73,14 +80,16 @@ val GameView = FC<GameViewProps> { props ->
         val key = e.asDynamic().code as String
         if (key == "Escape") {
             pressEscapeHandler()
-        } else if (props.gameState == GameState.PLAYING) changeDirection(key)
+        } else if (state.gameState == GameState.PLAYING) {
+            changeDirection(key)
+        }
     }
 
     props.addToWindow("keydown", keyDownHandler)
 
     useEffect(lastPressedKey) {
         moveSnakeInterval?.let { clearInterval(it) }
-        moveSnakeInterval = setInterval(props.tempo.milliseconds) {
+        moveSnakeInterval = setInterval(state.settingsValues[Settings.TEMPO]!!.milliseconds) {
             lastPressedKey?.let { moveSnake(it) }
         }
     }
@@ -100,10 +109,10 @@ val GameView = FC<GameViewProps> { props ->
                 height = 100.pct
                 outline = Outline(((0.1).rem), LineStyle.solid, Color("gray"))
                 display = Display.grid
-                gridTemplateRows = repeat(props.size, 1.fr)
-                gridTemplateColumns = repeat(props.size, 1.fr)
+                gridTemplateRows = repeat(state.settingsValues[Settings.SIZE]!!, 1.fr)
+                gridTemplateColumns = repeat(state.settingsValues[Settings.SIZE]!!, 1.fr)
             }
-            props.gameboard.board.flatten().map {
+            state.gameboard.board.flatten().map {
                 div {
                     css {
                         outline = Outline((0.1).rem, LineStyle.solid, Color("#0f0f0f"))
@@ -120,7 +129,7 @@ val GameView = FC<GameViewProps> { props ->
             }
         }
 
-        if (props.gameState == GameState.PAUSED) {
+        if (state.gameState == GameState.PAUSED) {
             section {
                 css {
                     position = Position.fixed
