@@ -31,7 +31,6 @@ val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
     val keyDownHandler: (Event) -> Unit = { e ->
         val key = e.asDynamic().code as String
         if (key == "Escape" && !pressed && props.onUnpauseFromEsc != undefined) {
-            console.log("UNPAUSING GAME")
             pressed = true
             setTimeout(500.milliseconds) {
                 props.onUnpauseFromEsc()

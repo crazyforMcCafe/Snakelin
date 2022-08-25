@@ -36,7 +36,6 @@ object WindowHandler {
         window.removeEventListener(type, handlers[id])
 
         handlers[id] = handler
-        console.log("Handler size = ${handlers.size}")
         window.addEventListener(type, handler)
     }
 
