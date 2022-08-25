@@ -1,7 +1,7 @@
 package components
 
-import Handler
 import Store
+import WindowHandler
 import components.pauseMenu.PauseMenu
 import csstype.*
 import emotion.react.css
@@ -21,17 +21,12 @@ import store.reducers.Direction
 import utils.ReusableCSS
 import kotlin.time.Duration.Companion.milliseconds
 
-external interface GameViewProps : Props {
-    var addToWindow: (type: String, Handler) -> Unit
-}
-
-val GameView = FC<GameViewProps> { props ->
+val GameView = FC<Props> {
     val store = Store.appStore
     var state by useState(store.state)
 
     var lastPressedKey: String? by useState(null)
     var moveSnakeInterval: Timeout? by useState(null)
-//    var currentGameState: GameState by useState(GameState.PLAYING)
 
     fun getDirectionFromKey(key: String) = when (key) {
         "KeyW", "ArrowUp" -> Direction.UP
@@ -55,7 +50,6 @@ val GameView = FC<GameViewProps> { props ->
     store.subscribe { state = store.state }
 
     useEffect(state.gameState) {
-        console.log("current gameState = ${state.gameState}")
         if (state.gameState == GameState.PLAYING) {
             lastPressedKey?.let {
                 moveSnake(it)
@@ -68,11 +62,7 @@ val GameView = FC<GameViewProps> { props ->
 
     fun pressEscapeHandler() {
         if (state.gameState != GameState.PAUSED) {
-            console.log("Should go to paused")
             store.dispatch(SetGameStateAction(GameState.PAUSED))
-        } else if (state.gameState == GameState.PAUSED) {
-            console.log("Should go to resumed")
-            store.dispatch(SetGameStateAction(GameState.PLAYING))
         }
     }
 
@@ -85,7 +75,7 @@ val GameView = FC<GameViewProps> { props ->
         }
     }
 
-    props.addToWindow("keydown", keyDownHandler)
+    WindowHandler.addToWindow("gameViewHandler", "keydown", keyDownHandler)
 
     useEffect(lastPressedKey) {
         moveSnakeInterval?.let { clearInterval(it) }

@@ -1,17 +1,18 @@
 package components.pauseMenu
 
+import Store
+import WindowHandler
 import csstype.*
 import emotion.react.css
 import kotlinx.js.timers.setTimeout
 import org.w3c.dom.HTMLButtonElement
-import react.FC
-import react.Props
+import org.w3c.dom.events.Event
+import react.*
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
-import react.useState
 import store.reducers.GameState
 import store.reducers.SetGameStateAction
 import utils.ReusableCSS
@@ -19,25 +20,45 @@ import kotlin.time.Duration.Companion.milliseconds
 
 external interface PauseMenuButtonProps : Props {
     var onClick: MouseEventHandler<HTMLButtonElement>
+    var onUnpauseFromEsc: () -> Unit
     var text: String
 }
 
 val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
+    val HANDLER_ID = "pauseButtonHandler${this.hashCode()}"
     var pressed by useState(false)
+
+    val keyDownHandler: (Event) -> Unit = { e ->
+        val key = e.asDynamic().code as String
+        if (key == "Escape" && !pressed && props.onUnpauseFromEsc != undefined) {
+            console.log("UNPAUSING GAME")
+            pressed = true
+            setTimeout(500.milliseconds) {
+                props.onUnpauseFromEsc()
+            }
+        }
+    }
+
+    WindowHandler.addToWindow(HANDLER_ID, "keydown", keyDownHandler)
+
+    rawUseEffect({
+        return@rawUseEffect {
+            WindowHandler.removeFromWindow(HANDLER_ID, "keydown")
+        }
+    })
 
     button {
         css {
             ReusableCSS.styledButton(this)
             ReusableCSS.invertColorWhenHovered(this)
-            if (pressed) {
-                console.log("FLASHING")
-                ReusableCSS.buttonFlashAnimation(this)
-            }
+            if (pressed) ReusableCSS.buttonFlashAnimation(this)
         }
         onClick = {
-            pressed = true
-            setTimeout(500.milliseconds) {
-                props.onClick(it)
+            if (!pressed) {
+                pressed = true
+                setTimeout(500.milliseconds) {
+                    props.onClick(it)
+                }
             }
         }
         +props.text
@@ -72,14 +93,15 @@ val PauseMenu = FC<Props> {
             }
             PauseMenuButton {
                 onClick = {
-                    console.log("Pressed RESUME button")
+                    store.dispatch(SetGameStateAction(GameState.PLAYING))
+                }
+                onUnpauseFromEsc = {
                     store.dispatch(SetGameStateAction(GameState.PLAYING))
                 }
                 text = "Resume"
             }
             PauseMenuButton {
                 onClick = {
-                    console.log("Pressed QUIT button")
                     store.dispatch(SetGameStateAction(GameState.PLAYING))
                 }
                 text = "Quit"

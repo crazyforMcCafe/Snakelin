@@ -53,7 +53,7 @@ object ReusableCSS {
         }
 
         animationName = pressButtonAni
-        animationDuration = "300ms".unsafeCast<AnimationDuration>()
+        animationDuration = "200ms".unsafeCast<AnimationDuration>()
         animationTimingFunction = "cubic-bezier(1, 0, 1, 0)".unsafeCast<AnimationTimingFunction>()
         animationIterationCount = AnimationIterationCount.infinite
     }

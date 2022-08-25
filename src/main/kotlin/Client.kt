@@ -31,12 +31,18 @@ typealias Handler = (Event) -> Unit
 object WindowHandler {
     private val handlers = mutableMapOf<String, Handler>()
 
-    val addToWindowHandler: (type: String, Handler) -> Unit = { type, handler ->
+    val addToWindow: (id: String, type: String, Handler) -> Unit = { id, type, handler ->
 
-        window.removeEventListener(type, handlers[type])
+        window.removeEventListener(type, handlers[id])
 
-        handlers[type] = handler
+        handlers[id] = handler
+        console.log("Handler size = ${handlers.size}")
         window.addEventListener(type, handler)
+    }
+
+    val removeFromWindow: (id: String, type: String) -> Unit = { id, type ->
+        window.removeEventListener(type, handlers[id])
+        handlers.remove(id)
     }
 }
 
@@ -45,9 +51,7 @@ val App = FC<Props> {
 
     useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE]!!)) }
 
-    GameView {
-        addToWindow = WindowHandler.addToWindowHandler
-    }
+    GameView()
 }
 
 fun main() {
