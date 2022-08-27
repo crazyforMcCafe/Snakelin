@@ -25,7 +25,7 @@ external interface PauseMenuButtonProps : Props {
 }
 
 val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
-    val HANDLER_ID = "pauseButtonHandler${this.hashCode()}"
+    val handlerId = "pauseButtonHandler${this.hashCode()}"
     var pressed by useState(false)
 
     val keyDownHandler: (Event) -> Unit = { e ->
@@ -38,11 +38,11 @@ val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
         }
     }
 
-    WindowHandler.addToWindow(HANDLER_ID, "keydown", keyDownHandler)
+    WindowHandler.addToWindow(handlerId, "keydown", keyDownHandler)
 
     rawUseEffect({
         return@rawUseEffect {
-            WindowHandler.removeFromWindow(HANDLER_ID, "keydown")
+            WindowHandler.removeFromWindow(handlerId, "keydown")
         }
     })
 
@@ -101,7 +101,7 @@ val PauseMenu = FC<Props> {
             }
             PauseMenuButton {
                 onClick = {
-                    store.dispatch(SetGameStateAction(GameState.PLAYING))
+                    store.dispatch(SetGameStateAction(GameState.NONE))
                 }
                 text = "Quit"
             }
