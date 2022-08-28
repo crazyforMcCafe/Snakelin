@@ -54,7 +54,7 @@ val MainMenu = FC<MainMenuProps> { props ->
                     color = Color("#fff")
                     left = 1.2.rem
 
-                    ReusableCSS.slideInFromLeftAnimation(this)
+                    ReusableCSS.slideInFromLeftAnimation(0.ms, 1.2.rem)(this)
                 }
             }
 

@@ -24,12 +24,12 @@ object ReusableCSS {
         transition = "transform 100ms ease-out".unsafeCast<Transition>()
 
         hover {
-            transform = translatey(0.4.em)
+            transform = translatey(0.2.em)
         }
 
         active {
             transition = None.none
-            transform = translatey(0.8.em)
+            transform = translatey(0.4.em)
         }
     }
 
@@ -57,18 +57,25 @@ object ReusableCSS {
         animationTimingFunction = "cubic-bezier(1, 0, 1, 0)".unsafeCast<AnimationTimingFunction>()
         animationIterationCount = AnimationIterationCount.infinite
     }
-    val slideInFromLeftAnimation: CSS = {
-        val slideInAni = keyframes {
-            0.pct {
-                left = (-100).rem
-            }
-            100.pct {
-                left = 1.2.rem
-            }
-        }
 
-        animationName = slideInAni
-        animationDuration = "1s".unsafeCast<AnimationDuration>()
-        animationTimingFunction = "cubic-bezier(0.02, 0.32, 0.58, 1)".unsafeCast<AnimationTimingFunction>()
+    val slideInFromLeftAnimation: (delay: AnimationDelay, spaceFromLeft: MarginLeft) -> CSS = { delay, space ->
+        {
+            marginLeft = (-100).rem
+
+            val slideInAni = keyframes {
+                from {
+                    marginLeft = (-100).rem
+                }
+                to {
+                    marginLeft = space
+                }
+            }
+
+            animationName = slideInAni
+            animationDuration = 1.s
+            animationTimingFunction = "cubic-bezier(0.02, 0.32, 0.58, 1)".unsafeCast<AnimationTimingFunction>()
+            animationDelay = delay
+            animationFillMode = AnimationFillMode.forwards
+        }
     }
 }

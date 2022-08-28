@@ -7,8 +7,9 @@ import react.Props
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
+import utils.ReusableCSS
 
-val DUMMY_SCORES = listOf<ULong>()
+val DUMMY_SCORES = listOf<ULong>(100u,200u,300u,400u,500u)
 
 val HighscoreBoard = FC<Props> {
     div {
@@ -23,6 +24,8 @@ val HighscoreBoard = FC<Props> {
                 fontSize = (2.4).rem
                 marginBottom = (0.2).rem
                 width = 40.rem
+
+                ReusableCSS.slideInFromLeftAnimation(200.ms, 0.rem)(this)
             }
             +"High Scores:"
         }
@@ -41,7 +44,7 @@ val HighscoreBoard = FC<Props> {
                 css { gridColumn = "1 / 2 / span 1 / span 1".unsafeCast<GridArea>() }
                 if (DUMMY_SCORES.isEmpty()) {
                     p {
-                        css { color = Color("green"); width = 20.rem}
+                        css { color = Color("green"); width = 20.rem }
                         +"Play some games and get some scores!"
                     }
                 } else {
@@ -68,7 +71,12 @@ val HighscoreBoard = FC<Props> {
                                         zIndex = integer(-1)
                                     }
                                 }
-                            p { +"$score" }
+                            p {
+                                css {
+                                    ReusableCSS.slideInFromLeftAnimation(((index + 1) * 10 + 250).ms, 0.rem)(this)
+                                }
+                                +"$score"
+                            }
                         }
                     }
                 }
