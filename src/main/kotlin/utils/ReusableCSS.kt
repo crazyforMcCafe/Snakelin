@@ -57,4 +57,18 @@ object ReusableCSS {
         animationTimingFunction = "cubic-bezier(1, 0, 1, 0)".unsafeCast<AnimationTimingFunction>()
         animationIterationCount = AnimationIterationCount.infinite
     }
+    val slideInFromLeftAnimation: CSS = {
+        val slideInAni = keyframes {
+            0.pct {
+                left = (-100).rem
+            }
+            100.pct {
+                left = 1.2.rem
+            }
+        }
+
+        animationName = slideInAni
+        animationDuration = "1s".unsafeCast<AnimationDuration>()
+        animationTimingFunction = "cubic-bezier(0.02, 0.32, 0.58, 1)".unsafeCast<AnimationTimingFunction>()
+    }
 }

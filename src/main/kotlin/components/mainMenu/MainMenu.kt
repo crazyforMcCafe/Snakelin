@@ -10,6 +10,7 @@ import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
 import react.dom.html.ReactHTML.section
+import utils.ReusableCSS
 
 external interface MainMenuProps : Props {
     var onPlayButtonClick:  MouseEventHandler<HTMLButtonElement>
@@ -34,9 +35,30 @@ val MainMenu = FC<MainMenuProps> { props ->
                 paddingLeft = (1.2).rem
 
                 backgroundImage = "linear-gradient(to right, #333399, transparent 50%)".unsafeCast<BackgroundImage>()
+
+                color = rgba(255,255,255,0.0)
+
+                after {
+                    content = "''".unsafeCast<Content>()
+                    position = Position.absolute
+                    backgroundColor = Color("black")
+                    height = 100.pct
+                    width = 40.rem
+                    left = (-40 + -0.2).rem // Must subtract the width of borderLeft
+
+                }
+
+                before {
+                    content = "'Snakelin'".unsafeCast<Content>()
+                    position = Position.absolute
+                    color = Color("#fff")
+                    left = 1.2.rem
+
+                    ReusableCSS.slideInFromLeftAnimation(this)
+                }
             }
 
-            +"Snakelin"
+            +"Snakelin" // Makes the sizing right
         }
 
         section {
