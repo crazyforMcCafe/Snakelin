@@ -54,7 +54,7 @@ val MainMenu = FC<MainMenuProps> { props ->
                     color = Color("#fff")
                     left = 1.2.rem
 
-                    ReusableCSS.slideInFromLeftAnimation(0.ms, 1.2.rem)(this)
+                    ReusableCSS.slideInFromLeftAnimation(0.ms, 0.rem)(this)
                 }
             }
 
@@ -71,6 +71,15 @@ val MainMenu = FC<MainMenuProps> { props ->
                 css {
                     gridArea = "1 / 1 / span 1 / span 1".unsafeCast<GridArea>()
                     marginLeft = 2.rem
+
+                    before {
+                        content = "''".unsafeCast<Content>()
+                        position = Position.absolute
+                        backgroundColor = Color("black")
+                        height = 60.7.pct // This is the exact height of the div (21.1rem), idk where the other 39.3% of height went.
+                        width = 2.rem
+                        left = 0.rem
+                    }
                 }
                 HighscoreBoard()
             }

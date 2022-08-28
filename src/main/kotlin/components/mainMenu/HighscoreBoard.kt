@@ -9,7 +9,8 @@ import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
 import utils.ReusableCSS
 
-val DUMMY_SCORES = listOf<ULong>(100u,200u,300u,400u,500u)
+val DUMMY_SCORES = listOf<ULong>(100u, 200u, 300u, 400u, 500u)
+//val DUMMY_SCORES = listOf<ULong>()
 
 val HighscoreBoard = FC<Props> {
     div {
@@ -44,12 +45,17 @@ val HighscoreBoard = FC<Props> {
                 css { gridColumn = "1 / 2 / span 1 / span 1".unsafeCast<GridArea>() }
                 if (DUMMY_SCORES.isEmpty()) {
                     p {
-                        css { color = Color("green"); width = 20.rem }
+                        css {
+                            color = Color("green"); width = 20.rem
+                            ReusableCSS.slideInFromLeftAnimation(250.ms, 0.rem)(this)
+                        }
                         +"Play some games and get some scores!"
                     }
                 } else {
                     css { zIndex = integer(2) }
                     DUMMY_SCORES.sortedDescending().forEachIndexed { index, score ->
+                        val delayMs = (index * 10 + 250)
+
                         section {
                             css { position = Position.relative }
                             if (index in 0..2)
@@ -69,11 +75,12 @@ val HighscoreBoard = FC<Props> {
                                         height = 100.pct
                                         left = (-25).pct
                                         zIndex = integer(-1)
+                                        ReusableCSS.slideInFromLeftAnimation(delayMs.ms, 0.rem)(this)
                                     }
                                 }
                             p {
                                 css {
-                                    ReusableCSS.slideInFromLeftAnimation(((index + 1) * 10 + 250).ms, 0.rem)(this)
+                                    ReusableCSS.slideInFromLeftAnimation(delayMs.ms, 0.rem)(this)
                                 }
                                 +"$score"
                             }
@@ -88,7 +95,10 @@ val HighscoreBoard = FC<Props> {
                 }
                 (1..5).forEach {
                     p {
-                        css { zIndex = integer(2); position = Position.relative }
+                        css {
+                            zIndex = integer(2); position = Position.relative
+                            ReusableCSS.slideInFromLeftAnimation((it * 10 + 250).ms, 0.rem)(this)
+                        }
                         +"$it."
                     }
                 }
