@@ -18,7 +18,7 @@ import store.reducers.Settings
 
 val INITIAL_STATE = AppState(
     gameState = GameState.NONE,
-    settingsIndices = mapOf(Settings.TEMPO to 2, Settings.SIZE to 2),
+    settingsIndices = mapOf(Settings.TEMPO to 0, Settings.SIZE to 0),
     gameboard = Gameboard(10, 10)
 )
 
@@ -58,6 +58,7 @@ val App = FC<Props> {
 
     val playButtonClickHandler: MouseEventHandler<HTMLButtonElement> = {
         store.dispatch(SetGameStateAction(GameState.PLAYING))
+        store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE] ?: error("Could not initialize board: ${Settings.SIZE} not found ins settingsValues")))
     }
 
     when (gameState) {

@@ -9,8 +9,8 @@ import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
 import utils.ReusableCSS
 
-val DUMMY_SCORES = listOf<ULong>(100u, 200u, 300u, 400u, 500u)
-//val DUMMY_SCORES = listOf<ULong>()
+//val DUMMY_SCORES = listOf<ULong>(100u, 200u, 300u, 400u, 500u)
+val DUMMY_SCORES = listOf<ULong>()
 
 val HighscoreBoard = FC<Props> {
     div {
