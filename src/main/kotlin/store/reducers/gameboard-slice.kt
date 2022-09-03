@@ -26,35 +26,34 @@ val gameboardReducer: Reducer<Gameboard> = { state, action ->
                         Direction.RIGHT -> state.board[row][column + 1]
                     }
                 } catch (_: IndexOutOfBoundsException) {
-                    // TODO: End game
                     null
                 }
             }
 
-            newHead?.let {
-                if (it.role == GridSpaceRoles.SNAKE_BODY) {
-                    // TODO: End game
-                    return@let state
-                }
-
-                var newFood = state.food
-
-                val newSnake = if(it.role == GridSpaceRoles.FOOD) {
-                    newFood = newFood - it + state.board.randomEmptyGridSpace(GridSpaceRoles.FOOD)
-                    listOf(it) + state.snake
-                } else {
-                    listOf(it) + state.snake.dropLast(1)
+            var newFoodSet = state.food
+            val newSnake: List<Gameboard.GridSpace> = newHead?.let {
+                val newSnake = when (it.role) {
+                    GridSpaceRoles.SNAKE_BODY -> {
+                        return@let state.snake.map { gridSpace -> gridSpace.copy(role = GridSpaceRoles.DEAD) }
+                    }
+                    GridSpaceRoles.FOOD -> {
+                        newFoodSet = newFoodSet - it + state.board.randomEmptyGridSpace(GridSpaceRoles.FOOD)
+                        listOf(it) + state.snake.map { gridSpace ->  gridSpace.copy(role = GridSpaceRoles.SNAKE_BODY) }
+                    }
+                    else -> listOf(it) + state.snake.dropLast(1).map { gridSpace ->  gridSpace.copy(role = GridSpaceRoles.SNAKE_BODY) }
                 }
 
                 it.role = GridSpaceRoles.SNAKE_HEAD
 
-                Gameboard(
-                    rowSize = state.rowSize,
-                    columnSize = state.columnSize,
-                    snake = newSnake,
-                    food = newFood
-                )
-            } ?: state
+                newSnake
+            } ?: state.snake.map { gridSpace ->  gridSpace.copy(role = GridSpaceRoles.DEAD) } // TODO: End game
+
+            Gameboard(
+                rowSize = state.rowSize,
+                columnSize = state.columnSize,
+                food = newFoodSet,
+                snake = newSnake
+            )
         }
         else -> state
     }

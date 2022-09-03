@@ -62,7 +62,7 @@ val SettingEditButton = FC<SettingEditButtonProps> { props ->
 val SettingSetter = FC<SettingSetterProps> { props ->
     val store = Store.appStore
     var state by useState(store.state)
-    var settingIndex by useState(0)
+    var settingIndex by useState(store.state.settingsValues[props.settingId] ?: 0)
 
     store.subscribe { state = store.state }
 

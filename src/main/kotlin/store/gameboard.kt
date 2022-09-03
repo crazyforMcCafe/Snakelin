@@ -1,6 +1,6 @@
 package store
 
-enum class GridSpaceRoles { EMPTY, SNAKE_HEAD, SNAKE_BODY, FOOD }
+enum class GridSpaceRoles { EMPTY, SNAKE_HEAD, SNAKE_BODY, FOOD, DEAD }
 
 typealias Board = List<List<Gameboard.GridSpace>>
 fun Board.randomEmptyGridSpace(setRoleTo: GridSpaceRoles = GridSpaceRoles.EMPTY): Gameboard.GridSpace {
@@ -22,11 +22,11 @@ class Gameboard(
 ) {
 
     init {
-        snake.forEachIndexed { index, snakePiece ->
-            snakePiece.apply { board[row][column].role = if (index == 0) GridSpaceRoles.SNAKE_HEAD else GridSpaceRoles.SNAKE_BODY }
+        snake.forEach {
+            it.apply { board[row][column].role = if (role == GridSpaceRoles.EMPTY) GridSpaceRoles.SNAKE_BODY else role }
         }
-        food.forEach { foodPiece ->
-            foodPiece.apply { board[row][column].role = GridSpaceRoles.FOOD }
+        food.forEach {
+            it.apply { board[row][column].role = GridSpaceRoles.FOOD }
         }
     }
 

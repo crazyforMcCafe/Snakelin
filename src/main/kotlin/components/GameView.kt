@@ -44,7 +44,17 @@ val GameView = FC<Props> {
     }
 
     fun changeDirection(keyPressed: String) {
-        if (lastPressedKey != keyPressed) moveSnake(keyPressed)
+        val isDifferentDirection = lastPressedKey != keyPressed
+
+        val lastDirection = getDirectionFromKey(lastPressedKey ?: "")
+        val newDirection = getDirectionFromKey(keyPressed)
+        val indexOfLastDirection = Direction.values().indexOf(lastDirection)
+        val indexOfNewDirection = Direction.values().indexOf(newDirection)
+
+        val ranIntoSelf = (state.gameboard.snake.size > 1) &&
+                    (indexOfLastDirection == indexOfNewDirection + if (indexOfNewDirection % 2 == 1) -1 else 1)
+
+        if (isDifferentDirection && !ranIntoSelf) moveSnake(keyPressed)
     }
 
     store.subscribe { state = store.state }
@@ -84,6 +94,10 @@ val GameView = FC<Props> {
         }
     }
 
+    fun endGameHandler() {
+        store.dispatch(SetGameStateAction(GameState.NONE))
+    }
+
     div {
         css {
             position = Position.relative
@@ -97,22 +111,23 @@ val GameView = FC<Props> {
             css {
                 width = 100.pct
                 height = 100.pct
-                outline = Outline(((0.1).rem), LineStyle.solid, Color("gray"))
+                outline = Outline((0.1.rem), LineStyle.solid, Color("gray"))
                 display = Display.grid
                 gridTemplateRows = repeat(state.settingsValues[Settings.SIZE]!!, 1.fr)
                 gridTemplateColumns = repeat(state.settingsValues[Settings.SIZE]!!, 1.fr)
             }
             state.gameboard.board.flatten().map {
                 div {
+                    if (it.role == GridSpaceRoles.DEAD) endGameHandler()
                     css {
-                        outline = Outline((0.1).rem, LineStyle.solid, Color("#0f0f0f"))
+                        outline = Outline(0.1.rem, LineStyle.solid, Color("#0f0f0f"))
                         backgroundColor = when (it.role) {
+                            GridSpaceRoles.DEAD -> Color(ReusableCSS.SNAKE_DEAD_COLOR)
                             GridSpaceRoles.SNAKE_HEAD -> Color(ReusableCSS.SNAKE_HEAD_COLOR)
                             GridSpaceRoles.SNAKE_BODY -> Color(ReusableCSS.SNAKE_BODY_COLOR)
                             GridSpaceRoles.FOOD -> Color(ReusableCSS.FOOD_COLOR)
                             GridSpaceRoles.EMPTY -> Color(ReusableCSS.GRID_BACKGROUND_COLOR)
                         }
-                        color = Color("green")
                     }
                     id = "gridSpace__${it.row}-${it.column}"
                 }

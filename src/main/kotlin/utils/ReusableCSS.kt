@@ -8,8 +8,9 @@ typealias CSS = PropertiesBuilder.() -> Unit
 object ReusableCSS {
     const val SNAKE_HEAD_COLOR = "#fff"
     const val SNAKE_BODY_COLOR = "#738678"
-    const val FOOD_COLOR = "#f10"
+    const val FOOD_COLOR = "#630436"
     const val GRID_BACKGROUND_COLOR = "#000"
+    const val SNAKE_DEAD_COLOR = "#f10"
 
     val styledButton: CSS = {
         padding = 0.4.rem
