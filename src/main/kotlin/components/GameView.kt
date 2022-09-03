@@ -2,7 +2,6 @@ package components
 
 import Store
 import WindowHandler
-import components.pauseMenu.PauseMenu
 import csstype.*
 import emotion.react.css
 import kotlinx.js.timers.Timeout

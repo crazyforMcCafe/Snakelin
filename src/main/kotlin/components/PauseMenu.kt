@@ -1,4 +1,4 @@
-package components.pauseMenu
+package components
 
 import Store
 import WindowHandler
