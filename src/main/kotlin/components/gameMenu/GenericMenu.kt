@@ -1,6 +1,5 @@
-package components
+package components.gameMenu
 
-import Store
 import WindowHandler
 import csstype.*
 import emotion.react.css
@@ -13,18 +12,16 @@ import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
-import store.reducers.GameState
-import store.reducers.SetGameStateAction
 import utils.ReusableCSS
 import kotlin.time.Duration.Companion.milliseconds
 
-external interface PauseMenuButtonProps : Props {
+external interface GenericMenuButtonProps : Props {
     var onClick: MouseEventHandler<HTMLButtonElement>
     var onUnpauseFromEsc: () -> Unit
     var text: String
 }
 
-val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
+val GenericMenuButton = FC<GenericMenuButtonProps> { props ->
     val handlerId = "pauseButtonHandler${this.hashCode()}"
     var pressed by useState(false)
 
@@ -64,9 +61,12 @@ val PauseMenuButton = FC<PauseMenuButtonProps> { props ->
     }
 }
 
-val PauseMenu = FC<Props> {
-    val store = Store.appStore
+external interface GenericMenuProps : Props {
+    var text: String
+    var buttons: List<ReactNode>
+}
 
+val GenericMenu = FC<GenericMenuProps> { props ->
     div {
         css {
             width = 28.rem
@@ -82,27 +82,15 @@ val PauseMenu = FC<Props> {
                 textAlign = TextAlign.center
                 marginBottom = 1.2.rem
             }
-            +"Paused"
+            +props.text
         }
         section {
             css {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceEvenly
             }
-            PauseMenuButton {
-                onClick = {
-                    store.dispatch(SetGameStateAction(GameState.PLAYING))
-                }
-                onUnpauseFromEsc = {
-                    store.dispatch(SetGameStateAction(GameState.PLAYING))
-                }
-                text = "Resume"
-            }
-            PauseMenuButton {
-                onClick = {
-                    store.dispatch(SetGameStateAction(GameState.NONE))
-                }
-                text = "Quit"
+            props.buttons.map {
+                +it
             }
         }
     }
