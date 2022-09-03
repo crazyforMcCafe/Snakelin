@@ -88,7 +88,6 @@ val PauseMenu = FC<Props> {
             css {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceEvenly
-//                gap = 0.8.rem
             }
             PauseMenuButton {
                 onClick = {
