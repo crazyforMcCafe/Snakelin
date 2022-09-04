@@ -36,7 +36,7 @@ val MainMenu = FC<MainMenuProps> { props ->
 
                 backgroundImage = "linear-gradient(to right, #333399, transparent 50%)".unsafeCast<BackgroundImage>()
 
-                color = rgba(255,255,255,0.0)
+                color = rgba(255,255,255,0.0)  // h1 text is only used for spacing, so it's made to be transparent
 
                 after {
                     content = "''".unsafeCast<Content>()
