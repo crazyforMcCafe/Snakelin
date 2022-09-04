@@ -34,7 +34,7 @@ val gameboardReducer: Reducer<Gameboard> = { state, action ->
             val newSnake: List<Gameboard.GridSpace> = newHead?.let {
                 val newSnake = when (it.role) {
                     GridSpaceRoles.SNAKE_BODY -> {
-                        return@let state.snake.map { gridSpace -> gridSpace.copy(role = GridSpaceRoles.DEAD) }
+                        return@let state.snake.map { gridSpace ->  gridSpace.copy(role = GridSpaceRoles.DEAD) }
                     }
                     GridSpaceRoles.FOOD -> {
                         newFoodSet = newFoodSet - it + state.board.randomEmptyGridSpace(GridSpaceRoles.FOOD)
@@ -46,7 +46,7 @@ val gameboardReducer: Reducer<Gameboard> = { state, action ->
                 it.role = GridSpaceRoles.SNAKE_HEAD
 
                 newSnake
-            } ?: state.snake.map { gridSpace ->  gridSpace.copy(role = GridSpaceRoles.DEAD) } // TODO: End game
+            } ?: state.snake.map { gridSpace ->  gridSpace.copy(role = GridSpaceRoles.DEAD) }
 
             Gameboard(
                 rowSize = state.rowSize,

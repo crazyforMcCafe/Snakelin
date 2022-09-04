@@ -54,11 +54,18 @@ val App = FC<Props> {
     var gameState by useState(store.state.gameState)
 
     useEffectOnce { store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE]!!)) }
-    store.subscribe { gameState = store.state.gameState }
+    store.subscribe {
+        gameState = store.state.gameState
+    }
 
     val playButtonClickHandler: MouseEventHandler<HTMLButtonElement> = {
         store.dispatch(SetGameStateAction(GameState.PLAYING))
-        store.dispatch(InitBoardAction(store.state.settingsValues[Settings.SIZE] ?: error("Could not initialize board: ${Settings.SIZE} not found ins settingsValues")))
+        store.dispatch(
+            InitBoardAction(
+                store.state.settingsValues[Settings.SIZE]
+                    ?: error("Could not initialize board: ${Settings.SIZE} not found in settingsValues")
+            )
+        )
     }
 
     when (gameState) {

@@ -2,6 +2,7 @@ package components
 
 import Store
 import WindowHandler
+import components.gameMenu.GameOverMenu
 import components.gameMenu.PauseMenu
 import csstype.*
 import emotion.react.css
@@ -9,12 +10,9 @@ import kotlinx.js.timers.Timeout
 import kotlinx.js.timers.clearInterval
 import kotlinx.js.timers.setInterval
 import org.w3c.dom.events.Event
-import react.FC
-import react.Props
+import react.*
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
-import react.useEffect
-import react.useState
 import store.GridSpaceRoles
 import store.reducers.*
 import store.reducers.Direction
@@ -71,7 +69,7 @@ val GameView = FC<Props> {
     }
 
     fun pressEscapeHandler() {
-        if (state.gameState != GameState.PAUSED) {
+        if (state.gameState == GameState.PLAYING) {
             store.dispatch(SetGameStateAction(GameState.PAUSED))
         }
     }
@@ -95,7 +93,10 @@ val GameView = FC<Props> {
     }
 
     fun endGameHandler() {
-        store.dispatch(SetGameStateAction(GameState.NONE))
+        lastPressedKey = null
+        moveSnakeInterval?.let { clearInterval(it) }
+        moveSnakeInterval = null
+        store.dispatch(SetGameStateAction(GameState.OVER))
     }
 
     div {
@@ -118,7 +119,7 @@ val GameView = FC<Props> {
             }
             state.gameboard.board.flatten().map {
                 div {
-                    if (it.role == GridSpaceRoles.DEAD) endGameHandler()
+                    if (it.role == GridSpaceRoles.DEAD && state.gameState != GameState.OVER) endGameHandler()
                     css {
                         outline = Outline(0.1.rem, LineStyle.solid, Color("#0f0f0f"))
                         backgroundColor = when (it.role) {
@@ -143,6 +144,18 @@ val GameView = FC<Props> {
                     transform = translate((-50).pct, (-50).pct)
                 }
                 PauseMenu()
+            }
+        }
+
+        if (state.gameState == GameState.OVER) {
+            section {
+                css {
+                    position = Position.fixed
+                    top = 50.pct
+                    left = 50.pct
+                    transform = translate((-50).pct, (-50).pct)
+                }
+                GameOverMenu()
             }
         }
     }

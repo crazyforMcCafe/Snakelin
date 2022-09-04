@@ -1,6 +1,5 @@
 package components.gameMenu
 
-<<<<<<<< HEAD:src/main/kotlin/components/gameMenu/GenericMenu.kt
 import WindowHandler
 import csstype.*
 import emotion.react.css
@@ -61,24 +60,12 @@ val GenericMenuButton = FC<GenericMenuButtonProps> { props ->
         +props.text
     }
 }
-========
-import Store
-import components.gameMenu.GenericMenu
-import components.gameMenu.GenericMenuButton
-import react.FC
-import react.Props
-import react.create
-import store.reducers.GameState
-import store.reducers.SetGameStateAction
-
->>>>>>>> origin/main:src/main/kotlin/components/PauseMenu.kt
 
 external interface GenericMenuProps : Props {
     var text: String
     var buttons: List<ReactNode>
 }
 
-<<<<<<<< HEAD:src/main/kotlin/components/gameMenu/GenericMenu.kt
 val GenericMenu = FC<GenericMenuProps> { props ->
     div {
         css {
@@ -104,26 +91,7 @@ val GenericMenu = FC<GenericMenuProps> { props ->
             }
             props.buttons.map {
                 +it
-========
-    GenericMenu {
-        text = "Paused"
-        buttons = listOf(
-            GenericMenuButton.create {
-                onClick = {
-                    store.dispatch(SetGameStateAction(GameState.PLAYING))
-                }
-                onUnpauseFromEsc = {
-                    store.dispatch(SetGameStateAction(GameState.PLAYING))
-                }
-                text = "Resume"
-            },
-            GenericMenuButton.create {
-                onClick = {
-                    store.dispatch(SetGameStateAction(GameState.NONE))
-                }
-                text = "Quit"
->>>>>>>> origin/main:src/main/kotlin/components/PauseMenu.kt
             }
-        )
+        }
     }
 }
