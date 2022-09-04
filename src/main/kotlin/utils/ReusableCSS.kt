@@ -5,7 +5,7 @@ import emotion.css.keyframes
 
 typealias CSS = PropertiesBuilder.() -> Unit
 
-fun Content(s: String): Content = "'$s'".unsafeCast<Content>()
+fun Content(text: String): Content = "'$text'".unsafeCast<Content>()
 
 
 object ReusableCSS {
