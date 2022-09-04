@@ -11,6 +11,7 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
 import react.dom.html.ReactHTML.section
 import react.useState
+import utils.Content
 import utils.ReusableCSS
 
 external interface MainMenuProps : Props {
@@ -26,7 +27,7 @@ val MainMenu = FC<MainMenuProps> { props ->
             width = 100.pct
 
             before {
-                content = "''".unsafeCast<Content>()
+                content = Content("")
                 position = Position.absolute
                 height = 1.rem
                 top = (-1).rem
@@ -53,7 +54,7 @@ val MainMenu = FC<MainMenuProps> { props ->
                 color = rgba(255,255,255,0.0)  // h1 text is only used for spacing, so it's made to be transparent
 
                 after {
-                    content = "''".unsafeCast<Content>()
+                    content = Content("")
                     position = Position.absolute
                     backgroundColor = Color("black")
                     height = 100.pct
@@ -63,7 +64,7 @@ val MainMenu = FC<MainMenuProps> { props ->
                 }
 
                 before {
-                    content = "'Snakelin'".unsafeCast<Content>()
+                    content = Content("Snakelin")
                     position = Position.absolute
                     color = Color("#fff")
                     left = 1.2.rem
@@ -87,7 +88,7 @@ val MainMenu = FC<MainMenuProps> { props ->
                     marginLeft = 2.rem
 
                     before {
-                        content = "''".unsafeCast<Content>()
+                        content = Content("")
                         position = Position.absolute
                         backgroundColor = Color("black")
                         height = 60.7.pct // This is the exact height of the div (21.1rem), idk where the other 39.3% of height went.

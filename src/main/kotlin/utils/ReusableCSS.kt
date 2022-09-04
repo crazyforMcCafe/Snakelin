@@ -5,6 +5,9 @@ import emotion.css.keyframes
 
 typealias CSS = PropertiesBuilder.() -> Unit
 
+fun Content(s: String): Content = "'$s'".unsafeCast<Content>()
+
+
 object ReusableCSS {
     const val SNAKE_HEAD_COLOR = "#fff"
     const val SNAKE_BODY_COLOR = "#738678"
