@@ -10,6 +10,7 @@ import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
 import react.dom.html.ReactHTML.section
+import react.useState
 import utils.ReusableCSS
 
 external interface MainMenuProps : Props {
@@ -17,10 +18,23 @@ external interface MainMenuProps : Props {
 }
 
 val MainMenu = FC<MainMenuProps> { props ->
+    var hoveringPlayButton by useState(false)
+
     div {
         css {
             position = Position.absolute
             width = 100.pct
+
+            before {
+                content = "''".unsafeCast<Content>()
+                position = Position.absolute
+                height = 1.rem
+                top = (-1).rem
+                width = 100.pct
+                boxShadow = if (hoveringPlayButton) BoxShadow(0.rem, 0.rem, 14.rem, 2.rem, Color("#0437f2")) else None.none
+                zIndex = integer(2)
+                transition = "box-shadow 0.15s ease-out".unsafeCast<Transition>()
+            }
         }
 
         h1 {
@@ -96,6 +110,8 @@ val MainMenu = FC<MainMenuProps> { props ->
         }
         button {
             css {
+                ReusableCSS.invertColorWhenHovered(this)
+
                 border = None.none
                 background = None.none
                 display = Display.block
@@ -112,6 +128,12 @@ val MainMenu = FC<MainMenuProps> { props ->
                 cursor = Cursor.pointer
             }
             onClick = props.onPlayButtonClick
+            onMouseOver = {
+                hoveringPlayButton = true
+            }
+            onMouseOut = {
+                hoveringPlayButton = false
+            }
 
             +"PLAY"
         }
